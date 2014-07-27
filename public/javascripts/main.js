@@ -122,7 +122,7 @@ Enemy.prototype.destroy = function(){
 	if(players[0].score % 10 === 0){
 		CONFIG.enemySpeed += 0.6;
 	}
-	document.getElementById('killed').innerText = players[0].score;
+	document.getElementById('killed').textContent = players[0].score;
 };
 
 function getRandomArbitrary(min, max) {
@@ -197,7 +197,7 @@ function update() {
 		if(enemy.y >= h - CONFIG.enemyRadius){
 			enemies.splice(enemies.indexOf(enemy), 1);
 			limit--;
-			document.getElementById('canMiss').innerText = limit;
+			document.getElementById('canMiss').textContent = limit;
 			if(limit == 0){
 				//gaeeeemu overuuu
 				clearInterval(spawner);
