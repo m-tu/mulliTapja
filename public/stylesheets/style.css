@@ -6,3 +6,19 @@ body {
 a {
   color: #00B7FF;
 }
+
+#info {
+    margin-bottom: 30px;
+}
+
+#info span {
+    font-weight: bold;
+}
+
+#canMiss {
+    margin-left: 20px;
+}
+
+#lives {
+    margin-left: 20px;
+}
