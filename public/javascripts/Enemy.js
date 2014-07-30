@@ -2,14 +2,33 @@
  * Created by martenhennoch on 28/07/14.
  */
 
-var Enemy = function(x, y, color, speed){
+
+var TYPES = {
+	blue : {
+		radius: 20,
+		speed : 1.6,
+		color : "blue"
+	},
+	red : {
+		radius: 15,
+		speed: 2,
+		color: "red"
+	},
+	purple : {
+		radius: 10,
+		speed: 2.6,
+		color: "purple"
+	}
+};
+
+var Enemy = function(x, y, type, level){
 	this.x = x;
 	this.y = y;
-	this.r = CONFIG.enemyRadius;
-	this.hp = CONFIG.enemyHP;
-	this.speed = speed;
+	this.r = type.radius;
+//	this.hp = CONFIG.enemyHP;
+	this.speed = type.speed * level.speedMultiplier;
 	this.destroyed = false;
-	this.color = color;
+	this.color = type.color;
 };
 
 Enemy.prototype.draw = function(){
@@ -21,10 +40,13 @@ Enemy.prototype.draw = function(){
 };
 
 Enemy.prototype.destroy = function(){
+	console.log("destroy");
 	this.destroyed = true;
 	game.players[0].score++;
-	if(game.players[0].score % 10 === 0){
-		CONFIG.enemySpeed += 0.6;
-	}
+
 	document.getElementById('killed').textContent = game.players[0].score;
+};
+
+Enemy.prototype.isOutOfBounds = function(){
+	return this.y >= h - this.r;
 };

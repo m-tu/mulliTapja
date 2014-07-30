@@ -1,14 +1,31 @@
 extends layout
 
 block content
-  div(id="info")
-    span SCORE:
-    span(id="killed") 0
-    span(id="lives") Lives:
-    span(id="canMiss") 10
-  canvas(id="canvas", width="500px", height="500px")
+  div(id="container")
+      div(id="info")
+        span SCORE:
+        span(id="killed") 0
+        span(id="lives") Lives:
+        span(id="canMiss") 10
+        span Level(max10):
+        span(id="level") 1
+      canvas(id="canvas", width="700px", height="600px")
+      p(id="cover")
+      div(id="levelInfo")
+        table
+          tr
+            td
+                span START GAME
+          tr(id="continue")
+            td
+              button CONTINUE
+          tr
+            td
+                button(id="startGame") START
 
 
+
+  script(src="/javascripts/jquery-2.1.1.js")
   script(src="/javascripts/Game.js")
   script(src="/javascripts/Projectile.js")
   script(src="/javascripts/Player.js")

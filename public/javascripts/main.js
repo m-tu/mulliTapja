@@ -1,20 +1,15 @@
 /**
  * Created by martenhennoch on 22/06/14.
  */
-var canvas = document.getElementById("canvas"),
-		ctx = canvas.getContext("2d"),
-		w=canvas.width,
-		h=canvas.height;
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
 	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
 var keyMap = {};
 
-var limit = CONFIG.limit;
-
 function drawBorders() {
 	ctx.beginPath();
+	ctx.lineWidth = 3;
 	ctx.moveTo(0, 0);
 
 	ctx.lineTo(w, 0);
@@ -28,7 +23,6 @@ function drawBorders() {
 
 function update() {
 	ctx.clearRect(0, 0, w , h);
-
 	drawBorders();
 	var p = game.players[0];
 
@@ -44,12 +38,13 @@ function update() {
 
 	game.projectiles.forEach(function(bullet){
 		bullet.detectColision(game);
- 		bullet.y -= 3;
+ 		bullet.move();
+
 		if(bullet.y > 0) {
 			if(!bullet.destroyed){
 				bullet.draw();
 			} else {
-				game.projectiles.splice(game.projectiles.indexOf(bullet), 1);
+				game.projectiles.splice(game.projectiles.indexOf(bullet), 1); //TODO Fix  can probably set to destroyed and just go over it and filter them out after each level
 			}
 		} else {
 			game.projectiles.splice(game.projectiles.indexOf(bullet), 1);
@@ -58,49 +53,86 @@ function update() {
 
 	game.enemies.forEach(function(enemy){
 		enemy.y += enemy.speed;
-		if(enemy.y >= h - CONFIG.enemyRadius){
-			game.enemies.splice(game.enemies.indexOf(enemy), 1);
-			limit--;
-			document.getElementById('canMiss').textContent = limit;
-			if(limit == 0){
-				//gaeeeemu overuuu
-				clearInterval(game.spawner);
-				console.log("GAME OVER!");
+		if(enemy.isOutOfBounds() && !enemy.destroyed){
+			enemy.destroyed = true;
+			if(p.lives !== 0) {
+				p.lives--;
+				document.getElementById('canMiss').textContent = p.lives;
+			}
+			if(p.lives === 0) {
+				game.end(false);
 			}
 		} else {
 			if(!enemy.destroyed) {
 				enemy.draw();
-			} else {
-				game.enemies.splice(game.enemies.indexOf(enemy), 1);
 			}
 		}
 	});
 
-	game.players.forEach(drawPlayer);
-	requestAnimationFrame(update);
-}
-
-function drawPlayer(player){
-	ctx.beginPath();
-	ctx.fillStyle = "black";
-	ctx.rect(player.x,player.y, CONFIG.playerWidth, CONFIG.playerHeight);
-	ctx.fill();
-	ctx.closePath();
+	game.drawPlayers();
+	if(p.lives != 0)
+		requestAnimationFrame(update);
 }
 
 function startSpawningEnemies(){
-	var count = 0;
 	var spawner = setInterval(function(){
-		if(count < CONFIG.maxEnemies){
-			var r = CONFIG.enemyRadius;
-			var initialEnemyPositionX = getRandomArbitrary(r, w - r);
-			var enemy = new Enemy(initialEnemyPositionX, 0, CONFIG.colors[getRandomArbitrary(0, CONFIG.colors.length - 1)], CONFIG.enemySpeed);
-			game.enemies.push(enemy);
-			count++;
+		var level = game.getLevel(),
+						r = CONFIG.enemyRadius; //TODO get from lvl data
+
+		var initialEnemyPositionX = getRandomArbitrary(r, w - r);
+
+		var enemyType,
+				random = Math.random();
+
+		if(random <= 0.7){
+			enemyType = TYPES.blue;
+		} else if(random >= 0.7 && random <= 0.9) {
+			enemyType = TYPES.red;
+		} else if(random >= 0.9) {
+			enemyType = TYPES.purple;
 		}
-	}, CONFIG.enemySpawnSpeed);
-	this.spawner = spawner;
+		var enemy = new Enemy(initialEnemyPositionX, 0, enemyType, level);
+		game.enemies.push(enemy);
+
+		if(game.enemies.length % 20 === 0) {
+			game.stopSpawningEnemies();
+			if(game.level < game.maxLevel){
+				game.level++;
+				document.getElementById('level').textContent = game.level;
+
+				var checkIfLevelCleared = setInterval(function(){
+					if(game.isLevelClear()){
+							clearInterval(checkIfLevelCleared);
+							displayLevelSummary();
+					}
+				}, 100);
+			} else {
+				game.end(true);
+			}
+
+		}
+
+	}, game.enemySpawnSpeed);
+
+	game.enemySpawner = spawner;
 };
+
+function displayLevelSummary(){
+	$("#continue").show();
+	$("#levelInfo").show();
+}
+
+$("#startGame").click(function(){
+	$("#levelInfo").fadeOut(400, function(){
+		init();
+	});
+});
+
+$("#continue").click(function(){
+	$("#levelInfo").fadeOut(400, function(){
+		startSpawningEnemies();
+	});
+});
 
 window.addEventListener('keydown', function(event){
 	if(!(event.keyCode == 32)) {
@@ -117,7 +149,7 @@ window.addEventListener('keyup', function(event){
 	}
 });
 
-(function init(){
+function init(){
 	var player1 = new Player(w/2, h - CONFIG.playerHeight);
 
 	game = new Game();
@@ -126,5 +158,6 @@ window.addEventListener('keyup', function(event){
 	startSpawningEnemies();
 
 	requestAnimationFrame(update);
-})();
+};
 
+drawBorders();

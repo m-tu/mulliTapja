@@ -5,7 +5,7 @@
 var Player = function(x, y){
 	this.x = x;
 	this.y = y;
-	this.hp = CONFIG.initialHp;
+	this.lives = CONFIG.limit;
 	this.score = 0;
 };
 
@@ -30,7 +30,16 @@ Player.prototype.moveDown = function(){
 };
 
 Player.prototype.shoot = function(){
-	snd.play();
-	var proj = new Projectile(this.x + CONFIG.playerWidth/2, this.y);
+//	snd.play();
+	var proj = new Projectile(this.x + Math.round((CONFIG.playerWidth - 7) / 2) + 2, this.y);
 	game.projectiles.push(proj);
 };
+
+Player.prototype.draw = function (){
+	ctx.beginPath();
+	ctx.fillStyle = "black";
+	ctx.rect(this.x, this.y, CONFIG.playerWidth, CONFIG.playerHeight);
+	ctx.rect(this.x + Math.round((CONFIG.playerWidth - 7) / 2), this.y - 4, 7, 4);
+	ctx.fill();
+	ctx.closePath();
+}

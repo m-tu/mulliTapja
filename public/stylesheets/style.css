@@ -1,5 +1,4 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -8,17 +7,30 @@ a {
 }
 
 #info {
-    margin-bottom: 30px;
+    padding: 2px;
+    border: black solid 2px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 #info span {
     font-weight: bold;
+    margin-left: 10px;
 }
 
-#canMiss {
-    margin-left: 20px;
+#container {
+    margin: 0 auto;
+    width: 50%;
 }
 
-#lives {
-    margin-left: 20px;
+#levelInfo {
+    border: black solid 2px;
+    padding: 5px;
+    position: absolute;
+    top: 350px;
+    left: 700px;
+}
+
+#continue {
+    display: none;
 }
