@@ -16,7 +16,11 @@ var CONFIG = {
 	colors : ["red", "blue", "green", "purple", "pink", "yellow"]
 };
 
-var snd = new Audio("/sound/pew.ogg");
+var snd = {
+	play: function() {
+		new Audio("/sound/pew.ogg").play();
+	}
+};
 
 var canvas = document.getElementById("canvas"),
 	ctx = canvas.getContext("2d"),
@@ -62,15 +66,16 @@ var LEVELS = {
 };
 
 var Game = function(){
-	this.enemies = [],
-	this.players = [],
-	this.projectiles = [],
-	this.status = 1, //wtf?
-	this.score = 0,
-	this.level = 1,
-	this.enemySpawnSpeed = CONFIG.enemySpawnSpeed,
-	this.enemySpawner = null,
-	this.maxLevel = 10
+	this.enemies = [];
+	this.players = [];
+	this.projectiles = [];
+	this.drops = [];
+	this.score = 0;
+	this.level = 1;
+	this.enemySpawnSpeed = CONFIG.enemySpawnSpeed;
+	this.enemySpawner = null;
+	this.maxLevel = 10;
+	this.enemiesPerLevel = 40;
 };
 
 Game.prototype.addPlayer = function(player){
@@ -116,13 +121,10 @@ Game.prototype.isLevelClear = function(){
 	return clear;
 };
 
-
 Game.prototype.stopSpawningEnemies = function(){
 	clearInterval(this.enemySpawner);
 	this.enemySpawner = null;
 };
-
-
 
 function getRandomArbitrary(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;

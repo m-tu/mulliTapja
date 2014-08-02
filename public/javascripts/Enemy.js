@@ -2,7 +2,6 @@
  * Created by martenhennoch on 28/07/14.
  */
 
-
 var TYPES = {
 	blue : {
 		radius: 20,
@@ -40,9 +39,9 @@ Enemy.prototype.draw = function(){
 };
 
 Enemy.prototype.destroy = function(){
-	console.log("destroy");
 	this.destroyed = true;
 	game.players[0].score++;
+
 
 	document.getElementById('killed').textContent = game.players[0].score;
 };

@@ -69,9 +69,20 @@ function update() {
 		}
 	});
 
+	//todo finish
+	game.drops.forEach(function(drop){
+		drop.y += drop.speed;
+		if(drop.isOutOfBounds()){
+			drop.destroyed = true;
+		} else {
+			drop.draw();
+		}
+	});
+
 	game.drawPlayers();
-	if(p.lives != 0)
+	if(p.lives != 0) {
 		requestAnimationFrame(update);
+	}
 }
 
 function startSpawningEnemies(){
@@ -94,7 +105,7 @@ function startSpawningEnemies(){
 		var enemy = new Enemy(initialEnemyPositionX, 0, enemyType, level);
 		game.enemies.push(enemy);
 
-		if(game.enemies.length % 20 === 0) {
+		if(game.enemies.length % game.enemiesPerLevel === 0) {
 			game.stopSpawningEnemies();
 			if(game.level < game.maxLevel){
 				game.level++;
