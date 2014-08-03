@@ -33,9 +33,19 @@ Projectile.prototype.detectColision = function(game){
 				that.destroy();
 			}
 		});
+		game.drops.forEach(function(drop){
+			if(!drop.destroyed && that._doesProjectileIntersectDrop(that, drop)){
+				drop.destroyAndActivate();
+				that.destroy();
+			}
+		});
 	}
 };
 
 Projectile.prototype._doesProjectileIntersectEnemy = function(bullet, enemy){
 	return Math.pow(bullet.x - enemy.x, 2) + Math.pow(bullet.y - enemy.y, 2) <=  Math.pow(enemy.r, 2);
+};
+
+Projectile.prototype._doesProjectileIntersectDrop = function(bullet, drop){
+	return (this.x >= drop.x && this.x <= drop.x + drop.w) && (this.y >= drop.y && this.y <= drop.y + drop.h);
 };

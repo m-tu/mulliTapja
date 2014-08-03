@@ -76,6 +76,8 @@ var Game = function(){
 	this.enemySpawner = null;
 	this.maxLevel = 10;
 	this.enemiesPerLevel = 40;
+	this.isDropActive = false;
+	this.currentDrop = null;
 };
 
 Game.prototype.addPlayer = function(player){

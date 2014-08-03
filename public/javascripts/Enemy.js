@@ -42,6 +42,7 @@ Enemy.prototype.destroy = function(){
 	this.destroyed = true;
 	game.players[0].score++;
 
+	game.players[0].shouldSpawnDrop();
 
 	document.getElementById('killed').textContent = game.players[0].score;
 };

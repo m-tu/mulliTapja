@@ -72,10 +72,12 @@ function update() {
 	//todo finish
 	game.drops.forEach(function(drop){
 		drop.y += drop.speed;
-		if(drop.isOutOfBounds()){
-			drop.destroyed = true;
+		if(!drop.destroyed && drop.isOutOfBounds()){
+			drop.destroy();
 		} else {
-			drop.draw();
+			if(!drop.destroyed){
+				drop.draw();
+			}
 		}
 	});
 

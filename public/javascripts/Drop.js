@@ -5,6 +5,7 @@
 
 //faster movespeed
 //slow down enemies
+//extra lives
 //2 weapons | complicated
 //destroy all visible enemies
 //
@@ -19,19 +20,28 @@ var Drop = function(x, y, color, hp, duration, logic, resetLogic){
 	this.duration = duration;
 	this.logic = logic;
 	this.resetLogic = resetLogic;
-	this.speed = 3;
-	this.deActivationTimer = setTimeout(this.deActivate, this.duration);
+	this.speed = 2;
+	this.deActivationTimer = null;
 	this.destroyed = false;
 };
 
 Drop.prototype.activate = function(){
-	if(this.hp <= 0) {
+//	if(this.hp <= 0) {
+		console.log("this activate");
 		this.logic();
-	}
+		game.currentDrop = this;
+//	}
 };
 
 Drop.prototype.deActivate = function(){
-	this.resetLogic();
+	console.log("deactive");
+	game.currentDrop.resetLogic();
+	game.isDropActive = false;
+};
+
+Drop.prototype.startDeActivationTimer = function(){
+	console.log("start timer");
+	this.deActivationTimer = setTimeout(this.deActivate, this.duration);
 };
 
 Drop.prototype.draw = function(){
@@ -49,3 +59,19 @@ Drop.prototype.isDestroyed = function(){
 Drop.prototype.isOutOfBounds = function(){
 	return this.y >= h - this.h / 2;
 };
+
+Drop.prototype.destroy = function(){
+	this.destroyed = true;
+};
+
+Drop.prototype.destroyAndActivate = function(){
+	this.destroy();
+	this.activate();
+	this.startDeActivationTimer();
+};
+
+
+
+
+
+
