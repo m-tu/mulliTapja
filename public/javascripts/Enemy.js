@@ -6,17 +6,20 @@ var TYPES = {
 	blue : {
 		radius: 20,
 		speed : 1.6,
-		color : "blue"
+		color : "blue",
+		score : 100
 	},
 	red : {
 		radius: 15,
 		speed: 2,
-		color: "red"
+		color: "red",
+		score : 150
 	},
 	purple : {
 		radius: 10,
 		speed: 2.6,
-		color: "purple"
+		color: "purple",
+		score : 200
 	}
 };
 
@@ -25,6 +28,7 @@ var Enemy = function(x, y, type, level){
 	this.y = y;
 	this.r = type.radius;
 //	this.hp = CONFIG.enemyHP;
+	this.score = type.score;
 	this.speed = type.speed * level.speedMultiplier;
 	this.destroyed = false;
 	this.color = type.color;
@@ -40,7 +44,7 @@ Enemy.prototype.draw = function(){
 
 Enemy.prototype.destroy = function(){
 	this.destroyed = true;
-	game.players[0].score++;
+	game.players[0].score += this.score;
 
 	game.players[0].shouldSpawnDrop();
 

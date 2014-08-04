@@ -27,20 +27,17 @@ var Drop = function(x, y, color, hp, duration, logic, resetLogic){
 
 Drop.prototype.activate = function(){
 //	if(this.hp <= 0) {
-		console.log("this activate");
 		this.logic();
 		game.currentDrop = this;
 //	}
 };
 
 Drop.prototype.deActivate = function(){
-	console.log("deactive");
 	game.currentDrop.resetLogic();
 	game.isDropActive = false;
 };
 
 Drop.prototype.startDeActivationTimer = function(){
-	console.log("start timer");
 	this.deActivationTimer = setTimeout(this.deActivate, this.duration);
 };
 
