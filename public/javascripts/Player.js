@@ -21,16 +21,6 @@ Player.prototype.moveRight = function(){
 		this.x += this.speed;
 };
 
-//Player.prototype.moveUp = function(){
-//	if(this.y - this.speed > 0)
-//		this.y -= this.speed;
-//};
-//
-//Player.prototype.moveDown = function(){
-//	if(this.y + this.speed < h - CONFIG.playerHeight)
-//		this.y += this.speed;
-//};
-
 Player.prototype.shoot = function(){
 //	snd.play();
 	var proj = new Projectile(this.x + Math.round((CONFIG.playerWidth - 7) / 2) + 2, this.y);
@@ -47,7 +37,6 @@ Player.prototype.draw = function (){
 };
 
 Player.prototype.shouldSpawnDrop = function(){
-	console.log("game", !game.isDropActive);
 	if(!game.isDropActive){
 //		var total = game.level * game.enemiesPerLevel;
 		var rand = Math.random();
@@ -55,16 +44,18 @@ Player.prototype.shouldSpawnDrop = function(){
 		if(rand > 0.1) { //TODO random spawn loc, make sure something spawns
 			game.drops.push(new Drop(w/2, 0, "black", 5, 10000,
 				function(){
-					console.log("speed updated");
-					game.players[0].speed += 5;
+					game.players[0].speed += 1;
 				},
 				function(){
-					console.log("speed reset");
-					game.players[0].speed -= 5;
+					game.players[0].speed -= 1;
 				}
 			));
 			game.isDropActive = true;
-			console.log("drop spawned");
 		}
 	}
+};
+
+Player.prototype.updateLives = function(){
+	this.lives--;
+	game.dom.lives.textContent = this.lives;
 };

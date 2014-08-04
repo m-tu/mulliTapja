@@ -30,10 +30,6 @@ function update() {
 		p.moveLeft();
 	} else if(keyMap[68]) {
 		p.moveRight();
-	} else if(keyMap[87]) {
-		p.moveUp();
-	} else if(keyMap[83]){
-		p.moveDown();
 	}
 
 	game.projectiles.forEach(function(bullet){
@@ -43,11 +39,9 @@ function update() {
 		if(bullet.y > 0) {
 			if(!bullet.destroyed){
 				bullet.draw();
-			} else {
-				game.projectiles.splice(game.projectiles.indexOf(bullet), 1); //TODO Fix  can probably set to destroyed and just go over it and filter them out after each level
 			}
 		} else {
-			game.projectiles.splice(game.projectiles.indexOf(bullet), 1);
+			bullet.destroy();
 		}
 	});
 
@@ -56,8 +50,7 @@ function update() {
 		if(enemy.isOutOfBounds() && !enemy.destroyed){
 			enemy.destroyed = true;
 			if(p.lives !== 0) {
-				p.lives--;
-				document.getElementById('canMiss').textContent = p.lives;
+				p.updateLives();
 			}
 			if(p.lives === 0) {
 				game.end(false);
@@ -69,7 +62,6 @@ function update() {
 		}
 	});
 
-	//todo finish
 	game.drops.forEach(function(drop){
 		drop.y += drop.speed;
 		if(!drop.destroyed && drop.isOutOfBounds()){
@@ -90,11 +82,7 @@ function update() {
 function startSpawningEnemies(){
 	var spawner = setInterval(function(){
 		var level = game.getLevel(),
-						r = CONFIG.enemyRadius; //TODO get from lvl data
-
-		var initialEnemyPositionX = getRandomArbitrary(r, w - r);
-
-		var enemyType,
+				enemyType,
 				random = Math.random();
 
 		if(random <= 0.7){
@@ -104,29 +92,28 @@ function startSpawningEnemies(){
 		} else if(random >= 0.9) {
 			enemyType = TYPES.purple;
 		}
-		var enemy = new Enemy(initialEnemyPositionX, 0, enemyType, level);
-		game.enemies.push(enemy);
+
+		var minx =  Math.round((CONFIG.playerWidth - 7) / 2) + 2;
+		var initialEnemyPositionX = getRandomArbitrary(minx, w - minx);
+		game.enemies.push(new Enemy(initialEnemyPositionX, 0, enemyType, level));
 
 		if(game.enemies.length % game.enemiesPerLevel === 0) {
 			game.stopSpawningEnemies();
 			if(game.level < game.maxLevel){
-				game.level++;
-				document.getElementById('level').textContent = game.level;
-
+				game.updateLevel();
 				var checkIfLevelCleared = setInterval(function(){
 					if(game.isLevelClear()){
-							clearInterval(checkIfLevelCleared);
-							displayLevelSummary();
+						console.log("bullets at the end: ", game.projectiles.length);
+						game.resetAfterLevel();
+						clearInterval(checkIfLevelCleared);
+						displayLevelSummary();
 					}
 				}, 100);
 			} else {
 				game.end(true);
 			}
-
 		}
-
 	}, game.enemySpawnSpeed);
-
 	game.enemySpawner = spawner;
 };
 
@@ -164,12 +151,9 @@ window.addEventListener('keyup', function(event){
 
 function init(){
 	var player1 = new Player(w/2, h - CONFIG.playerHeight);
-
 	game = new Game();
 	game.addPlayer(player1);
-
 	startSpawningEnemies();
-
 	requestAnimationFrame(update);
 };
 

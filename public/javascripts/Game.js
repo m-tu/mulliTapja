@@ -11,9 +11,7 @@ var CONFIG = {
 	playerMoveSpeed: 5,
 	enemyRadius: 20,
 	enemyHP: 2,
-	limit: 10,
-	maxEnemies: 100,
-	colors : ["red", "blue", "green", "purple", "pink", "yellow"]
+	limit: 10
 };
 
 var snd = {
@@ -32,9 +30,6 @@ var game = null;
 var LEVELS = {
 	"1" : {
 		speedMultiplier: 1
-	},
-	"2": {
-		speedMultiplier: 1.1
 	},
 	"2": {
 		speedMultiplier: 1.2
@@ -75,9 +70,13 @@ var Game = function(){
 	this.enemySpawnSpeed = CONFIG.enemySpawnSpeed;
 	this.enemySpawner = null;
 	this.maxLevel = 10;
-	this.enemiesPerLevel = 40;
+	this.enemiesPerLevel = 20;
 	this.isDropActive = false;
 	this.currentDrop = null;
+	this.dom = {
+		level: document.getElementById('level'),
+		lives: document.getElementById('canMiss')
+	};
 };
 
 Game.prototype.addPlayer = function(player){
@@ -95,8 +94,8 @@ Game.prototype.getLevel = function(){
 };
 
 Game.prototype.end = function(won){
-	console.log("end");
 	if(won){
+		console.log("win");
 		$("#levelInfo span").first().text("YOU WIN!");
 	} else {
 		//you lost
@@ -104,13 +103,12 @@ Game.prototype.end = function(won){
 			clearInterval(this.enemySpawner);
 			this.enemySpawner = null;
 
-			//TODO disable controls later on
+			//TODO disable controls later on mby
 			$("#levelInfo span").first().text("GAME OVER!");
 			$("#levelInfo button").first().text("RESTART!");
 		}
 
 	}
-	//do something, display score n stuff, add highscore, allow replay
 };
 
 Game.prototype.isLevelClear = function(){
@@ -126,6 +124,16 @@ Game.prototype.isLevelClear = function(){
 Game.prototype.stopSpawningEnemies = function(){
 	clearInterval(this.enemySpawner);
 	this.enemySpawner = null;
+};
+
+Game.prototype.updateLevel = function(){
+	this.level++;
+	this.dom.level.textContent = this.level;
+};
+
+Game.prototype.resetAfterLevel = function(){
+	this.projectiles = [];
+	this.enemies = [];
 };
 
 function getRandomArbitrary(min, max) {
