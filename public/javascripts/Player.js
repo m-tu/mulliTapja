@@ -38,7 +38,6 @@ Player.prototype.draw = function (){
 
 Player.prototype.shouldSpawnDrop = function(){
 	if(!game.isDropActive){
-//		var total = game.level * game.enemiesPerLevel;
 		var rand = Math.random();
 		//TODO total - game.enemies.length + game.enemiesPerLevel / 4 < game.enemies.length
 		if(rand > 0.1) { //TODO random spawn loc, make sure something spawns
