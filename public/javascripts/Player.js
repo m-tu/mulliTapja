@@ -2,13 +2,14 @@
  * Created by martenhennoch on 28/07/14.
  */
 
-var Player = function(x, y){
+var Player = function(x, y, name){
 	this.x = x;
 	this.y = y;
 	this.lives = CONFIG.limit;
 	this.score = 0;
 	this.speed = CONFIG.playerMoveSpeed;
 	this.dropActive = false;
+	this.name = name;
 };
 
 Player.prototype.moveLeft = function(){

@@ -8,6 +8,19 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+//var mongo = require('mongodb');
+//var db = connect('localhost:27017/mull');
+
+//var mongojs = require("mongodb");
+
+
+//mongodb://user:pass@host:port/dbname
+
+//var uri = "mongodb://localhost:27017/mull",
+//		db = mongojs.connect(uri, ["usercollection"], function(){
+//			console.log("yolo");
+//		});
+
 var app = express();
 
 // view engine setup
@@ -23,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,6 +69,10 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+//app.get('/test', function(req, res) {
+//	res.render('test');
+//});
 
 
 module.exports = app;

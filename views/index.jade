@@ -10,6 +10,12 @@ block content
         span Level(max10):
         span(id="level") 1
       canvas(id="canvas", width="700px", height="600px")
+      div(id="scores")
+        table
+            each val in result
+                tr
+                    td= val[0]
+                    td= val[1]
       p(id="cover")
       div(id="levelInfo")
         table

@@ -2,7 +2,6 @@
  * Created by martenhennoch on 30/07/14.
  */
 
-
 //faster movespeed
 //slow down enemies
 //extra lives
